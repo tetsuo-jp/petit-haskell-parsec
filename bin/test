@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# work around Windows brokenness
+./runtest $* > temp
+diff -b ../examples/$1.output temp
+rm -f temp

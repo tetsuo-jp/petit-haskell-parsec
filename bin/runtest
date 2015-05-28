@@ -1,0 +1,7 @@
+#!/bin/sh
+
+PROG=$1
+shift
+TRAFOS=""
+
+./petit < ../examples/$PROG

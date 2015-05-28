@@ -1,0 +1,67 @@
+\documentclass{jsarticle}
+\usepackage{amsmath}
+
+\newcommand{\sem}[1]{[\![{#1}]\!]}
+
+\title{プログラミング言語 petit}
+
+\begin{document}
+\maketitle
+\renewcommand{\arraystretch}{1.2}
+
+プログラミング言語petit(プチ)はコンピュータサイエンスの入門用に作られたものである\cite{TaNH99}．petiはごく簡単な構文と意味論から構成されている．このため，入門者がプログラミング言語の概念を学ぶには適している．
+
+まず，petiの構文を示す．
+構文領域は
+\[
+ \begin{array}{l}
+  \xi\text{: 識別子}\\
+  \epsilon\text{: 式}\\
+  \tau\text{: 文}
+ \end{array}
+\]
+の3つである．構文規則は
+\begin{enumerate}
+ \item[(i)] $\xi ::= \verb+A+ \mid \verb+B+ \mid \cdots \mid \verb+Z+$
+ \item[(ii)] $\epsilon ::= \verb+0+\mid\xi\mid\verb+suc+~\epsilon$
+ \item[(iii)] $\tau ::= \xi \,\verb+:=+\, \epsilon \mid \tau \verb+;+\, \tau \mid \verb+for+~\epsilon~\verb+times+~\verb+do+~\tau~\verb+end+$
+\end{enumerate}
+である．それぞれの構文領域についてひとつずつ構文規則が用意されている．ここで，非終端記号はギリシャ文字で，終端記号はタイプライタフォントでそれぞれ示している．識別子は大文字アルファベット1文字である．式と文の構文規則は再帰的である．文は，代入，連接，繰返しからなる．
+
+次に，petiの意味論を示す．意味領域は
+\[
+ \begin{array}{ll}
+  \mathbf{N} & 自然数の全体(0を含む)\\
+  \mathbf{S} = (\mathbf{Var} \rightarrow \mathbf{N}) & コンピュータの状態全体\\
+  \mathbf{C} = (\mathbf{S}\rightarrow \mathbf{S}) & コンピュータの状態の変換全体
+ \end{array}
+\]
+である．意味関数は，式と文の上に定義された
+\[
+ \begin{array}{l@{~}c@{~}l}
+ \mathcal{E} &:& \mathbf{Exp} \rightarrow (\mathbf{S} \rightarrow \mathbf{N})\\
+ \mathcal{C} &:& \mathbf{Pro} \rightarrow \mathbf{C}
+ \end{array}
+\]
+の2つがある．それぞれ，
+\begin{enumerate}
+ \item[(i)] $\mathcal{E}\sem{\mathtt{0}}(\sigma) = 0$
+ \item[(ii)] $\mathcal{E}\sem{\xi}(\sigma) = \sigma(\xi)$
+ \item[(iii)] $\mathcal{E}\sem{\mathtt{suc}~\epsilon}(\sigma) = \mathcal{E}\sem{\epsilon}(\sigma) + 1$
+ \item[(iv)] $\mathcal{C}\sem{\xi \texttt{:=}\, \epsilon}(\sigma) = \mathit{update}(\xi,\mathcal{E}\sem{\epsilon}(\sigma))(\sigma)$
+ \item[(v)] $\mathcal{C}\sem{\tau_0 \texttt{;}\, \tau_1}(\sigma) = \mathcal{C}\sem{\tau_1}(\mathcal{C}\sem{\tau_2}(\sigma))$
+ \item[(vi)] $\mathcal{C}\sem{\texttt{for}~\epsilon~\texttt{times}~\texttt{do}~\tau~\texttt{end}}(\sigma) = \mathit{iterate}(\mathcal{C}\sem{\tau},\mathcal{E}\sem{\epsilon}(\sigma))(\sigma)$
+\end{enumerate}
+と定められている．ここで，補助関数は，
+\[
+ \begin{array}{lcl}
+  \mathit{update}(\xi,\nu)(\sigma) &=& \sigma\{\xi:\nu\}\\
+  \mathit{iterate}(\theta,\nu) &=& \underbrace{\theta \circ \theta \circ \cdots \circ \theta}_{\nu}
+ \end{array}
+\]
+と定められている．
+
+\bibliographystyle{ipsjunsrt}
+\bibliography{petit}
+
+\end{document}
